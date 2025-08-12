@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>HRUAN Stock App</title>
+    <meta charset="UTF-8">
+    <title>HRUAN Stock Info</title>
 </head>
-<body>
-    <h1>Welcome to HRUAN!</h1>
-    <form method="POST" action="/get_stock">
-        <label for="symbol">Enter Stock Symbol:</label>
-        <input type="text" id="symbol" name="symbol" placeholder="e.g. AAPL, TSLA" required>
+<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+    <h1 style="color: green;">📈 Welcome to HRUAN!</h1>
+    <form method="POST" action="/">
+        <label>Enter Stock Symbol:</label>
+        <input type="text" name="symbol" required>
         <button type="submit">Get Info</button>
     </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if symbol %}
+        <h2>{{ symbol }} Stock Prices (Last 7 Days)</h2>
+        <ul>
+            {% for date, price in data %}
+                <li>{{ date }}: ₹{{ price }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>
