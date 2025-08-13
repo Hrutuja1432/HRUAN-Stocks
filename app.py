@@ -25,7 +25,8 @@ def home():
                         prices = history["Close"].round(2).tolist()
                         if chart_data["dates"] is None:
                             chart_data["dates"] = dates
-                        chart_data["datasets"].append({"label": symbol, "data": prices})
+                        zipped = list(zip(dates, prices))
+                        chart_data["datasets"].append({"label": symbol, "data": zipped})
                     else:
                         error = f"No data found for {symbol}"
             except Exception as e:

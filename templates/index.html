@@ -6,9 +6,10 @@
 </head>
 <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
     <h1 style="color: green;">📈 Welcome to HRUAN!</h1>
+
     <form method="POST" action="/">
-        <label>Enter Stock Symbol:</label>
-        <input type="text" name="symbol" required>
+        <label>Enter Stock Symbols (comma-separated):</label><br><br>
+        <input type="text" name="symbols" placeholder="AAPL, TSLA, INFY" required>
         <button type="submit">Get Info</button>
     </form>
 
@@ -16,11 +17,18 @@
         <p style="color: red;">{{ error }}</p>
     {% endif %}
 
-    {% if symbol %}
-        <h2>{{ symbol }} Stock Prices (Last 7 Days)</h2>
-        <ul>
-            {% for date, price in data %}
-                <li>{{ date }}: ₹{{ price }}</li>
+    {% if chart_data and chart_data.datasets %}
+        <h2>Stock Prices (Last 7 Days)</h2>
+        <ul style="list-style-type: none;">
+            {% for dataset in chart_data.datasets %}
+                <li>
+                    <strong>{{ dataset.label }}</strong>
+                    <ul>
+                        {% for date, price in dataset.data %}
+                            <li>{{ date }}: ₹{{ price }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
             {% endfor %}
         </ul>
     {% endif %}
