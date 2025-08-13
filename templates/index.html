@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>HRUAN Stock Info</title>
+    <title>HRUAN Stock Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
     <h1 style="color: green;">📈 Welcome to HRUAN!</h1>
@@ -19,18 +20,43 @@
 
     {% if chart_data and chart_data.datasets %}
         <h2>Stock Prices (Last 7 Days)</h2>
-        <ul style="list-style-type: none;">
-            {% for dataset in chart_data.datasets %}
-                <li>
-                    <strong>{{ dataset.label }}</strong>
-                    <ul>
-                        {% for date, price in dataset.data %}
-                            <li>{{ date }}: ₹{{ price }}</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
+        <canvas id="stockChart" width="800" height="400"></canvas>
+
+        <script>
+            const labels = {{ chart_data.dates | tojson }};
+            const datasets = [
+                {% for dataset in chart_data.datasets %}
+                {
+                    label: "{{ dataset.label }}",
+                    data: {{ dataset.data | tojson }},
+                    borderColor: "#" + Math.floor(Math.random()*16777215).toString(16),
+                    fill: false
+                },
+                {% endfor %}
+            ];
+
+            const config = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Stock Prices (Last 7 Days)'
+                        }
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('stockChart'), config);
+        </script>
     {% endif %}
 </body>
 </html>
